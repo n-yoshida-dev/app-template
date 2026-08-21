@@ -18,13 +18,17 @@ grep -rn '{{' --exclude-dir=.git .
 
 `SPEC.md` `TODO.md` `KNOWLEDGE.md` は空のまま始めてよい。
 
-## 2. フックに実行権限を付ける
+## 2. 共通プラグインが効いていることを確認する
 
-git は実行ビットを保存するが、テンプレート経由だと落ちていることがある。
+フック3種と `/apps-workflow:handoff` `/apps-workflow:pr-check` は `.claude/settings.json` の
+`enabledPlugins` で [apps-workflow プラグイン](https://github.com/n-yoshida-dev/claude-plugins)から読み込む。
+このマシンで初めて使うときだけ、プラグイン本体を取得する。
 
 ```bash
-chmod +x .claude/hooks/*.sh
-ls -l .claude/hooks/
+claude plugin list | grep apps-workflow || {
+  claude plugin marketplace add n-yoshida-dev/claude-plugins
+  claude plugin install apps-workflow@n-yoshida-dev
+}
 ```
 
 ## 3. プロジェクトを初期化する
