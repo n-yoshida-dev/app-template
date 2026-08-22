@@ -16,7 +16,14 @@
       "Bash(go mod tidy)",
       "Bash(go fmt *)",
       "Bash(node --version)",
-      "Bash(npm --version)"
+      "Bash(npm --version)",
+      "Bash(gh pr view *)",
+      "Bash(gh pr checks *)",
+      "Bash(gh pr merge *)",
+      "Bash(gh run list *)",
+      "Bash(gh run view *)",
+      "Bash(git switch main)",
+      "Bash(git pull)"
     ],
     "deny": [
       "Bash(git add -f *)",
@@ -24,41 +31,12 @@
     ]
   },
 
-  "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "\"${CLAUDE_PROJECT_DIR}\"/.claude/hooks/guard-secrets.sh",
-            "timeout": 10
-          }
-        ]
-      }
-    ],
-    "PostToolUse": [
-      {
-        "matcher": "Edit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "\"${CLAUDE_PROJECT_DIR}\"/.claude/hooks/check-edited.sh",
-            "timeout": 60
-          }
-        ]
-      }
-    ],
-    "SessionStart": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "\"${CLAUDE_PROJECT_DIR}\"/.claude/hooks/session-briefing.sh",
-            "timeout": 10
-          }
-        ]
-      }
-    ]
+  "extraKnownMarketplaces": {
+    "n-yoshida-dev": {
+      "source": { "source": "github", "repo": "n-yoshida-dev/claude-plugins" }
+    }
+  },
+  "enabledPlugins": {
+    "apps-workflow@n-yoshida-dev": true
   }
 }
