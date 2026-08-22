@@ -22,14 +22,16 @@ grep -rn '{{' --exclude-dir=.git .
 
 フック3種と `/apps-workflow:handoff` `/apps-workflow:pr-check` は `.claude/settings.json` の
 `enabledPlugins` で [apps-workflow プラグイン](https://github.com/n-yoshida-dev/claude-plugins)から読み込む。
-このマシンで初めて使うときだけ、プラグイン本体を取得する。
+このマシン（WSL ディストリ）で初めて使うときだけ、プラグイン本体を取得する。
+**Claude Code のセッション内**で実行する（シェルの `claude` コマンドは VSCode 拡張などでは PATH に無い）。
 
-```bash
-claude plugin list | grep apps-workflow || {
-  claude plugin marketplace add n-yoshida-dev/claude-plugins
-  claude plugin install apps-workflow@n-yoshida-dev
-}
 ```
+/plugin marketplace add n-yoshida-dev/claude-plugins
+/plugin install apps-workflow@n-yoshida-dev
+```
+
+導入済みかどうかは引数なしの `/plugin` で開く一覧から確認できる。
+セッション開始時に TODO の未完タスクが表示されれば動いている。
 
 ## 3. プロジェクトを初期化する
 
