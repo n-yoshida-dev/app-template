@@ -18,19 +18,29 @@ grep -rn '{{' --exclude-dir=.git .
 
 `SPEC.md` `TODO.md` `KNOWLEDGE.md` は空のまま始めてよい。
 
-## 2. 共通プラグインが効いていることを確認する
+## 2. 共通プラグインをこのアプリに入れる
 
 フック3種と `/apps-workflow:handoff` `/apps-workflow:pr-check` は `.claude/settings.json` の
 `enabledPlugins` で [apps-workflow プラグイン](https://github.com/n-yoshida-dev/claude-plugins)から読み込む。
-このマシン（WSL ディストリ）で初めて使うときだけ、プラグイン本体を取得する。
-**Claude Code のセッション内**で実行する（シェルの `claude` コマンドは VSCode 拡張などでは PATH に無い）。
+**ただし `enabledPlugins` だけでは install されない。アプリごとに project スコープで install が要る**
+（install の記録は `~/.claude/plugins/installed_plugins.json` にプロジェクトのパス単位で持たれるため、
+テンプレートで入れても新アプリには効かない）。マーケットプレイスの登録だけはマシン（WSL ディストリ）ごとに初回でよい。
+
+このアプリのディレクトリで開いた **Claude Code のセッション内**で実行する（スコープを聞かれたら project）。
 
 ```
-/plugin marketplace add n-yoshida-dev/claude-plugins
-/plugin install apps-workflow@n-yoshida-dev
+/plugin marketplace add n-yoshida-dev/claude-plugins   # マシンごとに初回だけ
+/plugin install apps-workflow@n-yoshida-dev            # アプリごとに必要
 ```
 
-導入済みかどうかは引数なしの `/plugin` で開く一覧から確認できる。
+Claude に代行させる場合は、VSCode 拡張に同梱の CLI で入れられる（シェルの `claude` は PATH に無い）。
+
+```bash
+CLI=$(ls -d ~/.vscode-server/extensions/anthropic.claude-code-*/resources/native-binary/claude | sort -V | tail -1)
+"$CLI" plugin install apps-workflow@n-yoshida-dev --scope project
+```
+
+どちらも**反映は次のセッションから**。導入済みかどうかは引数なしの `/plugin` で開く一覧から確認できる。
 セッション開始時に TODO の未完タスクが表示されれば動いている。
 
 ## 3. プロジェクトを初期化する
