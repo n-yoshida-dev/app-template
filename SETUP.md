@@ -26,22 +26,27 @@ grep -rn '{{' --exclude-dir=.git .
 （install の記録は `~/.claude/plugins/installed_plugins.json` にプロジェクトのパス単位で持たれるため、
 テンプレートで入れても新アプリには効かない）。マーケットプレイスの登録だけはマシン（WSL ディストリ）ごとに初回でよい。
 
-このアプリのディレクトリで開いた **Claude Code のセッション内**で実行する（スコープを聞かれたら project）。
+これは `apps-workflow` だけでなく、`enabledPlugins` にある**全プラグイン**（security-guidance・frontend-design など）で同じ。
+このアプリのディレクトリで開いた **Claude Code のセッション内**で 1 本ずつ実行する（スコープを聞かれたら project）。
 
 ```
 /plugin marketplace add n-yoshida-dev/claude-plugins   # マシンごとに初回だけ
-/plugin install apps-workflow@n-yoshida-dev            # アプリごとに必要
+/plugin install apps-workflow@n-yoshida-dev            # アプリごとに必要。他のプラグインも同様に 1 本ずつ
 ```
 
-Claude に代行させる場合は、VSCode 拡張に同梱の CLI で入れられる（シェルの `claude` は PATH に無い）。
+Claude に代行させる場合は、VSCode 拡張に同梱の CLI でまとめて入れられる
+（シェルの `claude` は PATH に無いが、フルパスなら Claude が実行できる）。
 
 ```bash
 CLI=$(ls -d ~/.vscode-server/extensions/anthropic.claude-code-*/resources/native-binary/claude | sort -V | tail -1)
-"$CLI" plugin install apps-workflow@n-yoshida-dev --scope project
+for p in $(jq -r '.enabledPlugins | keys[]' .claude/settings.json); do "$CLI" plugin install "$p" --scope project; done
 ```
 
-どちらも**反映は次のセッションから**。導入済みかどうかは引数なしの `/plugin` で開く一覧から確認できる。
-セッション開始時に TODO の未完タスクが表示されれば動いている。
+どちらも**反映は次のセッションから**。
+**`/plugin` の一覧や `claude plugin list` の「enabled」表示は `enabledPlugins` しか見ていないので当てにならない。**
+導入済みかどうかは `~/.claude/plugins/installed_plugins.json` にこのアプリのパスの記録があるかで確認する。
+セッション開始時に TODO の未完タスクが表示されれば apps-workflow は動いている。install 忘れは静かに死ぬ
+（2026-08-30 の棚卸しで、3 アプリが 8 日間フックなしで動いていたことが判明）。
 
 ## 3. プロジェクトを初期化する
 
