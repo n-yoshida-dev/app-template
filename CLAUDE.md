@@ -4,8 +4,9 @@
 
 ## セッション開始時にすること
 
-1. **`HANDOFF.md` を読む** — 現在地・決定事項・次のタスクがすべてここにある
-2. {{個人データを扱うアプリなら「実データが必要な作業なら `PRIVATE.md` を読む（.gitignore 対象）」。扱わないなら、この行ごと削除する}}
+1. **`HANDOFF.md` を読む** — 現在地と次の一手だけがある（決定事項や履歴は持たない）
+2. **設計・方針を提案する前に `logs/decisions.md` を読む** — ユーザーと合意済みの判断。蒸し返さない
+3. {{個人データを扱うアプリなら「実データが必要な作業なら `PRIVATE.md` を読む（.gitignore 対象）」。扱わないなら、この行ごと削除する}}
 
 未完タスクは SessionStart フックが `TODO.md` から自動で提示する。
 セッションの区切りには `/apps-workflow:handoff` を実行して引き継ぎを書く。
@@ -14,11 +15,12 @@
 
 | ファイル | 役割 | 読み手 |
 |---|---|---|
-| `HANDOFF.md` | セッション引き継ぎ・現在地 | AI |
+| `HANDOFF.md` | 現在地と次の一手だけ。履歴は持たない | AI |
+| `logs/decisions.md` | ユーザーと合意した判断の台帳。`/decide` で追記 | AI |
 | `PLAN.md` | 何を作るか・なぜ作るか | AI |
 | `SPEC.md` | 確定仕様。実装が参照する正本 | AI |
 | `TODO.md` | タスクと進捗 | AI |
-| `KNOWLEDGE.md` | 設計判断・ハマりどころ | AI |
+| `KNOWLEDGE.md` | 技術的な設計判断・ハマりどころ | AI |
 | `docs/` | 要件定義・アーキテクチャの解説 | 人間 |
 
 **同じ事実を AI 用と人間用の両方に書かない。** AI 用から人間用へリンクする。
@@ -43,6 +45,7 @@
 |---|---|---|
 | `/apps-workflow:handoff` | HANDOFF / TODO / KNOWLEDGE を更新して次のセッションへ渡す | プラグイン |
 | `/apps-workflow:pr-check` | CI と同じ検査をローカルでまとめて実行する（コミット・PR の前） | プラグイン |
+| `/decide` | 議論で決めたことを `logs/decisions.md` に 1 件追記する | ユーザー設定（`~/.claude/commands/decide.md`。全リポジトリ共通） |
 | `guard-secrets.sh` | 秘密情報・ローカル専用ファイルのコミットを阻止（PreToolUse） | プラグイン |
 | `check-edited.sh` | frontend の typecheck / lint、backend の go vet（PostToolUse） | プラグイン |
 | `session-briefing.sh` | TODO.md の未完タスクを起動時に提示（SessionStart） | プラグイン |

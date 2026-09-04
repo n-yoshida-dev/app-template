@@ -14,9 +14,9 @@ grep -rn '{{' --exclude-dir=.git .
 - `CLAUDE.md` — アプリ名・一行説明・固有の制約
 - `README.md` — アプリ名・概要・セットアップ手順
 - `PLAN.md` — 何を作るか・なぜ作るか（走り書きでよい）
-- `HANDOFF.md` — 「現在地」だけ埋める。残りは `/handoff` が育てる
+- `HANDOFF.md` — 「現在地」の 3 行だけ埋める。以後も `/apps-workflow:handoff` が現在地だけを書き換える（履歴は積まない）
 
-`SPEC.md` `TODO.md` `KNOWLEDGE.md` は空のまま始めてよい。
+`SPEC.md` `TODO.md` `KNOWLEDGE.md` `logs/decisions.md` は空のまま始めてよい。
 
 ## 2. 共通プラグインをこのアプリに入れる
 
