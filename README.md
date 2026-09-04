@@ -13,7 +13,7 @@ npm run dev
 
 ## ドキュメント
 
-- 開発ドキュメント（AI 向け）：`PLAN.md` / `SPEC.md` / `TODO.md` / `KNOWLEDGE.md` / `HANDOFF.md`
+- 開発ドキュメント（AI 向け）：`PLAN.md` / `SPEC.md` / `TODO.md` / `KNOWLEDGE.md` / `HANDOFF.md` / `logs/decisions.md`
 - 設計の解説（人間向け）：`docs/`
 
 ## ライセンス
