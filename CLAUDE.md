@@ -38,7 +38,7 @@
 
 ## Claude Code の設定
 
-共通のフック3種と `/apps-workflow:handoff` `/apps-workflow:pr-check` は [apps-workflow プラグイン](https://github.com/n-yoshida-dev/claude-plugins)から来る（`.claude/settings.json` の `enabledPlugins`）。
+共通のフック3種・スキル2種・エージェント1種は [apps-workflow プラグイン](https://github.com/n-yoshida-dev/claude-plugins)から来る（`.claude/settings.json` の `enabledPlugins`）。
 **`enabledPlugins` だけでは install されない。アプリごとに project スコープで install が要る**（反映は次のセッションから）。手順は `../CLAUDE.md`「新しいアプリを作るとき」を参照。
 
 | 種別 | 中身 | 出どころ |
@@ -46,6 +46,7 @@
 | `/apps-workflow:handoff` | HANDOFF / TODO / KNOWLEDGE を更新して次のセッションへ渡す | プラグイン |
 | `/apps-workflow:pr-check` | CI と同じ検査をローカルでまとめて実行する（コミット・PR の前） | プラグイン |
 | `/decide` | 議論で決めたことを `logs/decisions.md` に 1 件追記する | ユーザー設定（`~/.claude/commands/decide.md`。全リポジトリ共通） |
+| `apps-workflow:acceptance-reviewer` | マージ前に差分を「完了条件：」・SPEC.md・「守ること」に照らして検品する読み取り専用エージェント。PR を作って CI を待つ間に Agent ツールで呼ぶ | プラグイン |
 | `guard-secrets.sh` | 秘密情報・ローカル専用ファイルのコミットを阻止（PreToolUse） | プラグイン |
 | `check-edited.sh` | frontend の typecheck / lint、backend の go vet（PostToolUse） | プラグイン |
 | `session-briefing.sh` | TODO.md の未完タスクを起動時に提示（SessionStart） | プラグイン |
