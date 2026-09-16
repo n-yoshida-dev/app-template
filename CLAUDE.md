@@ -44,7 +44,7 @@
 | 種別 | 中身 | 出どころ |
 |---|---|---|
 | `/apps-workflow:progress` | TODO.md からフェーズ別の進捗表（バー・残り件数・前回の区切りからの増減）を出す | プラグイン |
-| `/apps-workflow:handoff` | HANDOFF（進捗表 + 現在地）/ TODO / KNOWLEDGE を更新して次のセッションへ渡す | プラグイン |
+| `/apps-workflow:handoff` | HANDOFF（進捗表 + 現在地）/ TODO / KNOWLEDGE / `logs/decisions.md` を更新して次のセッションへ渡す | プラグイン |
 | `/apps-workflow:pr-check` | CI と同じ検査をローカルでまとめて実行する（コミット・PR の前） | プラグイン |
 | `/apps-workflow:pr-flow` | PR の作成からマージまでの手順。Claude が PR を作る・マージするときに呼ぶ | プラグイン |
 | `/decide` | 議論で決めたことを `logs/decisions.md` に 1 件追記する | ユーザー設定（`~/.claude/commands/decide.md`。全リポジトリ共通） |
