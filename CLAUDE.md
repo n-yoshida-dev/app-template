@@ -22,6 +22,7 @@
 | `SPEC.md` | 確定仕様。実装が参照する正本 | AI |
 | `TODO.md` | タスクと進捗 | AI |
 | `KNOWLEDGE.md` | 技術的な設計判断・ハマりどころ | AI |
+| `DESIGN.md` | 見た目の決まり（Google の DESIGN.md の書式）。画面のファイルを変える前に読む。値の正本は CSS | AI |
 | `docs/` | 要件定義・アーキテクチャの解説 | 人間 |
 
 **同じ事実を AI 用と人間用の両方に書かない。** AI 用から人間用へリンクする。
@@ -39,7 +40,7 @@
 
 ## Claude Code の設定
 
-共通のフック3種・スキル4種・エージェント1種は [apps-workflow プラグイン](https://github.com/n-yoshida-dev/claude-plugins)から来る（`.claude/settings.json` の `enabledPlugins`）。
+共通のフック・スキル・エージェント（主なものは下の表。全部の一覧はプラグインの README）は [apps-workflow プラグイン](https://github.com/n-yoshida-dev/claude-plugins)から来る（`.claude/settings.json` の `enabledPlugins`）。
 **`enabledPlugins` だけでは install されない。アプリごとに project スコープで install が要る**（反映は次のセッションから）。手順は `../CLAUDE.md`「新しいアプリを作るとき」を参照。
 
 | 種別 | 中身 | 出どころ |
@@ -48,10 +49,13 @@
 | `/apps-workflow:handoff` | HANDOFF（進捗表 + 現在地）/ TODO / KNOWLEDGE / `logs/decisions.md` を更新して次のセッションへ渡す | プラグイン |
 | `/apps-workflow:pr-check` | CI と同じ検査をローカルでまとめて実行する（コミット・PR の前） | プラグイン |
 | `/apps-workflow:pr-flow` | PR の作成からマージまでの手順。Claude が PR を作る・マージするときに呼ぶ | プラグイン |
+| `/apps-workflow:look` | 画面の見た目を決める（A：見本を比較ページで選んでもらい `DESIGN.md` を確定）・点検する（B：画面を変えた PR ごとに撮影・点検役・Impeccable の検出器）手順 | プラグイン |
+| `apps-workflow:look-reviewer` | 撮った画像・`DESIGN.md`・CSS の差分を、「`DESIGN.md` とのずれ」「AI がよく作る形」「使いやすさの基本」で点検する読み取り専用エージェント。`/apps-workflow:look` の B で呼ぶ | プラグイン |
 | `/decide` | 議論で決めたことを `logs/decisions.md` に 1 件追記する | ユーザー設定（`~/.claude/commands/decide.md`。全リポジトリ共通） |
 | `apps-workflow:acceptance-reviewer` | マージ前に差分を「完了条件：」・SPEC.md・「守ること」に照らして検品する読み取り専用エージェント。PR を作って CI を待つ間に Agent ツールで呼ぶ | プラグイン |
 | `guard-secrets.sh` | 秘密情報・ローカル専用ファイルのコミットを阻止（PreToolUse） | プラグイン |
 | `check-edited.sh` | frontend の typecheck / lint、backend の go vet（PostToolUse） | プラグイン |
+| `look-notice.sh` | 画面のファイルを変えたら、`DESIGN.md` を読むことと見た目の点検を知らせる（PostToolUse。1 セッションに 1 回） | プラグイン |
 | `session-briefing.sh` | 進捗表と TODO.md の未完タスクを起動時に提示（SessionStart）。進捗表は最初の返答でユーザーに見せる | プラグイン |
 
 このアプリ固有のフック・スキルは `.claude/` に置く。固有のルールが増えたら `.claude/rules/` に切り出し、CLAUDE.md からはリンクだけにする。
