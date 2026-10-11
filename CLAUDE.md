@@ -45,7 +45,7 @@
 
 | 種別 | 中身 | 出どころ |
 |---|---|---|
-| `/apps-workflow:progress` | TODO.md からフェーズ別の進捗表（バー・残り件数・前回の区切りからの増減）を出す | プラグイン |
+| `/apps-workflow:progress` | TODO.md からフェーズ別の進捗表（バー・残り件数・公開まで残り・前回の区切りからの増減）を出す | プラグイン |
 | `/apps-workflow:handoff` | HANDOFF（進捗表 + 現在地）/ TODO / KNOWLEDGE / `logs/decisions.md` を更新して次のセッションへ渡す | プラグイン |
 | `/apps-workflow:pr-check` | CI と同じ検査をローカルでまとめて実行する（コミット・PR の前） | プラグイン |
 | `/apps-workflow:pr-flow` | PR の作成からマージまでの手順。Claude が PR を作る・マージするときに呼ぶ | プラグイン |
@@ -56,7 +56,7 @@
 | `guard-secrets.sh` | 秘密情報・ローカル専用ファイルのコミットを阻止（PreToolUse） | プラグイン |
 | `check-edited.sh` | frontend の typecheck / lint、backend の go vet（PostToolUse） | プラグイン |
 | `look-notice.sh` | 画面のファイルを変えたら、`DESIGN.md` を読むことと見た目の点検を知らせる（PostToolUse。1 セッションに 1 回） | プラグイン |
-| `session-briefing.sh` | 進捗表と TODO.md の未完タスクを起動時に提示（SessionStart）。進捗表は最初の返答でユーザーに見せる | プラグイン |
+| `session-briefing.sh` | 進捗表と TODO.md の未完タスク（公開の節を先に）を起動時に提示（SessionStart）。進捗表は最初の返答でユーザーに見せる | プラグイン |
 
 このアプリ固有のフック・スキルは `.claude/` に置く。固有のルールが増えたら `.claude/rules/` に切り出し、CLAUDE.md からはリンクだけにする。
 
