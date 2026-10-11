@@ -15,12 +15,14 @@ grep -rn '{{' --exclude-dir=.git .
 - `README.md` — アプリ名・概要・セットアップ手順
 - `PLAN.md` — 何を作るか・なぜ作るか（走り書きでよい）
 - `HANDOFF.md` — 「現在地」の 3 行だけ埋める。以後も `/apps-workflow:handoff` が現在地だけを書き換える（履歴は積まない）
+- `DESIGN.md` — 見た目の決まり。今は上の YAML の名前と一行説明、Overview の「誰が、どんな場面で使うか」「画面の仕事」だけを仮で埋める（3〜5 行）。
+  ほかは「未定」のままにし、最初の画面の骨組みが動いたら（見た目を作り込む前に）`/apps-workflow:look` の「A 方向を決める」で埋める
 
 `SPEC.md` `TODO.md` `KNOWLEDGE.md` `logs/decisions.md` は空のまま始めてよい。
 
 ## 2. 共通プラグインをこのアプリに入れる
 
-フック3種と `/apps-workflow:handoff` `/apps-workflow:pr-check` は `.claude/settings.json` の
+共通のフックと `/apps-workflow:handoff` `/apps-workflow:pr-check` などのスキルは `.claude/settings.json` の
 `enabledPlugins` で [apps-workflow プラグイン](https://github.com/n-yoshida-dev/claude-plugins)から読み込む。
 **ただし `enabledPlugins` だけでは install されない。アプリごとに project スコープで install が要る**
 （install の記録は `~/.claude/plugins/installed_plugins.json` にプロジェクトのパス単位で持たれるため、
@@ -63,6 +65,17 @@ mkdir backend && cd backend && go mod init github.com/n-yoshida-dev/{アプリ�
 
 フロントエンドを作ったら `package.json` に `typecheck` / `lint` / `format:check` / `test` / `build` の
 スクリプトを揃える。CI がこの5つを呼ぶ。
+
+**Vite の見本の見た目を消す。** `npm create vite` の見本は、紫の差し色（`--accent: #aa3bff`）・影・ロゴの画像を持っていて、残すとそのままアプリの見た目になる
+（babyfood-check がこの状態のまま。ops の `docs/2026-10-10-apps-デザイン改善の進め方.md` 3-3 節）。作った直後に次をする。
+
+- `frontend/src/App.css` を消し、`frontend/src/App.tsx` から読み込みを外す
+- `frontend/src/index.css` の中身を消す。色・文字の大きさ・余白は、見た目の方向を決めてから（`DESIGN.md`）CSS の変数で書く。それまでは書体と行間くらいにとどめる
+- 見本の画像（`frontend/src/assets/` の `hero.png`・`react.svg`・`vite.svg` と `frontend/public/icons.svg`）を消し、`App.tsx` を見本の中身の無い最小の画面にする
+- ブラウザのタブに出る Vite の印（`frontend/public/favicon.svg`）も消し、`frontend/index.html` の `<link rel="icon" …>` の行を外す。アプリの印は、作ったときに足す
+  （印が無くても、撮影の `look.mjs shoot` は画面のエラーに数えない。2026-10-11 に印の無いページで確かめた）
+- `frontend/index.html` の `<title>`（`Vite + React + TS`）をアプリの名前にする
+- 確かめ：`grep -rnE "aa3bff|App\.css|react\.svg|vite\.svg|hero\.png|icons\.svg|favicon\.svg|Vite \+ React" frontend/src frontend/index.html` が何も出さない
 
 ## 4. 開き直す
 
