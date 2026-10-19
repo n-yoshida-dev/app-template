@@ -66,6 +66,8 @@ mkdir backend && cd backend && go mod init github.com/n-yoshida-dev/{アプリ�
 フロントエンドを作ったら `package.json` に `typecheck` / `lint` / `format:check` / `test` / `build` の
 スクリプトを揃える。CI がこの5つを呼ぶ。
 
+frontend を作ったら、手元に `.vscode/settings.json`（JS・JSON・HTML の整形役を Prettier にする。`.vscode/` は `.gitignore` で外してある）と直下の `.prettierignore`（`frontend/` の外は Markdown だけ整形する。`.git/info/exclude` に `/.prettierignore` を足す）を置く。中身の見本は skill-matrix の手元の 2 ファイル（ops の `docs/2026-10-18-VSCode拡張と設定の見直し-2回目-段階1.md` の C17）。
+
 **Vite の見本の見た目を消す。** `npm create vite` の見本は、紫の差し色（`--accent: #aa3bff`）・影・ロゴの画像を持っていて、残すとそのままアプリの見た目になる
 （babyfood-check がこの状態のまま。ops の `docs/2026-10-10-apps-デザイン改善の進め方.md` 3-3 節）。作った直後に次をする。
 
