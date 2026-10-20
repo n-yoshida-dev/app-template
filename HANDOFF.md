@@ -18,7 +18,7 @@
 
 ## 進捗
 
-（`/apps-workflow:handoff` が TODO.md から自動で集計し、この節を丸ごと置き換える。手で書かない。`/apps-workflow:progress` でいつでも見られる）
+（`/apps-workflow:handoff` が TODO.md から自動で集計し、この節を丸ごと置き換える。手で書かない。`/todo-progress:progress` でいつでも見られる）
 
 ## 現在地
 
