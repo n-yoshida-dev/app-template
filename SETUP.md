@@ -28,12 +28,15 @@ grep -rn '{{' --exclude-dir=.git .
 （install の記録は `~/.claude/plugins/installed_plugins.json` にプロジェクトのパス単位で持たれるため、
 テンプレートで入れても新アプリには効かない）。マーケットプレイスの登録だけはマシン（WSL ディストリ）ごとに初回でよい。
 
-これは `apps-workflow` だけでなく、`enabledPlugins` にある**全プラグイン**（security-guidance・frontend-design など）で同じ。
+これは `apps-workflow` だけでなく、`enabledPlugins` にある**全プラグイン**（security-guidance・frontend-design・todo-progress など）で同じ。
+進捗表を出す todo-progress は公開用のリポジトリ（claude-code-toolkit）にあり、apps-workflow はこれに依存している（入っていないと apps-workflow ごと読み込みに失敗する）。
 このアプリのディレクトリで開いた **Claude Code のセッション内**で 1 本ずつ実行する（スコープを聞かれたら project）。
 
 ```
-/plugin marketplace add n-yoshida-dev/claude-plugins   # マシンごとに初回だけ
-/plugin install apps-workflow@n-yoshida-dev            # アプリごとに必要。他のプラグインも同様に 1 本ずつ
+/plugin marketplace add n-yoshida-dev/claude-plugins         # マシンごとに初回だけ
+/plugin marketplace add n-yoshida-dev/claude-code-toolkit    # マシンごとに初回だけ（todo-progress の置き場）
+/plugin install apps-workflow@n-yoshida-dev                  # アプリごとに必要。他のプラグインも同様に 1 本ずつ
+/plugin install todo-progress@yoshida-toolkit
 ```
 
 Claude に代行させる場合は、VSCode 拡張に同梱の CLI でまとめて入れられる
@@ -47,7 +50,7 @@ for p in $(jq -r '.enabledPlugins | keys[]' .claude/settings.json); do "$CLI" pl
 どちらも**反映は次のセッションから**。
 **`/plugin` の一覧や `claude plugin list` の「enabled」表示は `enabledPlugins` しか見ていないので当てにならない。**
 導入済みかどうかは `~/.claude/plugins/installed_plugins.json` にこのアプリのパスの記録があるかで確認する。
-セッション開始時に TODO の未完タスクが表示されれば apps-workflow は動いている。install 忘れは静かに死ぬ
+セッション開始時に進捗表と TODO の未完タスクが表示されれば todo-progress が、「HANDOFF.md を読む」の案内が出ていれば apps-workflow が動いている。install 忘れは静かに死ぬ
 （2026-08-30 の棚卸しで、3 アプリが 8 日間フックなしで動いていたことが判明）。
 
 ## 3. プロジェクトを初期化する
