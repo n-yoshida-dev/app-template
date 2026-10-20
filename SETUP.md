@@ -50,7 +50,8 @@ for p in $(jq -r '.enabledPlugins | keys[]' .claude/settings.json); do "$CLI" pl
 どちらも**反映は次のセッションから**。
 **`/plugin` の一覧や `claude plugin list` の「enabled」表示は `enabledPlugins` しか見ていないので当てにならない。**
 導入済みかどうかは `~/.claude/plugins/installed_plugins.json` にこのアプリのパスの記録があるかで確認する。
-セッション開始時に進捗表と TODO の未完タスクが表示されれば todo-progress が、「HANDOFF.md を読む」の案内が出ていれば apps-workflow が動いている。install 忘れは静かに死ぬ
+起動時のフックの出力はユーザーの画面には出ない。Claude の最初の返答の冒頭に進捗表が貼られていれば todo-progress が動いている。
+apps-workflow は、Claude に「起動時に HANDOFF.md を読むよう知らせを受けたか」を尋ねて確かめる。install 忘れは静かに死ぬ
 （2026-08-30 の棚卸しで、3 アプリが 8 日間フックなしで動いていたことが判明）。
 
 ## 3. プロジェクトを初期化する
