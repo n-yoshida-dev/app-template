@@ -26,7 +26,7 @@ grep -rn '{{' --exclude-dir=.git .
 `enabledPlugins` で [apps-workflow プラグイン](https://github.com/n-yoshida-dev/claude-plugins)から読み込む。
 **ただし `enabledPlugins` だけでは install されない。アプリごとに project スコープで install が要る**
 （install の記録は `~/.claude/plugins/installed_plugins.json` にプロジェクトのパス単位で持たれるため、
-テンプレートで入れても新アプリには効かない）。マーケットプレイスの登録だけはマシン（WSL ディストリ）ごとに初回でよい。
+テンプレートで入れても新アプリには効かない）。マーケットプレイスの登録だけは PC ごとに初回でよい（今の Windows の PC は登録済み）。
 
 これは `apps-workflow` だけでなく、`enabledPlugins` にある**全プラグイン**（security-guidance・frontend-design・todo-progress など）で同じ。
 進捗表を出す todo-progress は公開用のリポジトリ（claude-code-toolkit）にあり、apps-workflow はこれに依存している（入っていないと apps-workflow ごと読み込みに失敗する）。
@@ -39,11 +39,11 @@ grep -rn '{{' --exclude-dir=.git .
 /plugin install todo-progress@yoshida-toolkit
 ```
 
-Claude に代行させる場合は、VSCode 拡張に同梱の CLI でまとめて入れられる
-（シェルの `claude` は PATH に無いが、フルパスなら Claude が実行できる）。
+Claude に代行させる場合は、Claude デスクトップ版に同梱の CLI（`claude.exe`）でまとめて入れられる
+（シェルの `claude` は PATH に無いが、フルパスなら Claude が実行できる。デスクトップ版の更新で版のフォルダが変わるので、いちばん新しい版を探す）。
 
 ```bash
-CLI=$(ls -d ~/.vscode-server/extensions/anthropic.claude-code-*/resources/native-binary/claude | sort -V | tail -1)
+CLI=$(ls -d ~/AppData/Local/Claude-Data/claude_*/claude-code/*/*/claude.exe | sort -V | tail -1)
 for p in $(jq -r '.enabledPlugins | keys[]' .claude/settings.json); do "$CLI" plugin install "$p" --scope project; done
 ```
 
@@ -70,10 +70,10 @@ mkdir backend && cd backend && go mod init github.com/n-yoshida-dev/{アプリ�
 フロントエンドを作ったら `package.json` に `typecheck` / `lint` / `format:check` / `test` / `build` の
 スクリプトを揃える。CI がこの5つを呼ぶ。
 
-frontend を作ったら、手元に `.vscode/settings.json`（JS・JSON・HTML の整形役を Prettier にする。`.vscode/` は `.gitignore` で外してある）と直下の `.prettierignore`（`frontend/` の外は Markdown だけ整形する。`.git/info/exclude` に `/.prettierignore` を足す）を置く。中身の見本は skill-matrix の手元の 2 ファイル（ops の `docs/2026-10-18-VSCode拡張と設定の見直し-2回目-段階1.md` の C17）。
+frontend を作ったら、手元に `.vscode/settings.json`（JS・JSON・HTML の整形役を Prettier にする。`.vscode/` は `.gitignore` で外してある）と直下の `.prettierignore`（`frontend/` の外は Markdown だけ整形する。`.git/info/exclude` に `/.prettierignore` を足す）を置く。中身の見本は skill-matrix の手元の 2 ファイル（ops の `docs/環境/2026-10-18-VSCode拡張と設定の見直し-2回目-段階1.md` の C17）。
 
 **Vite の見本の見た目を消す。** `npm create vite` の見本は、紫の差し色（`--accent: #aa3bff`）・影・ロゴの画像を持っていて、残すとそのままアプリの見た目になる
-（babyfood-check がこの状態のまま。ops の `docs/2026-10-10-apps-デザイン改善の進め方.md` 3-3 節）。作った直後に次をする。
+（babyfood-check がこの状態のまま。ops の `docs/apps/2026-10-10-apps-デザイン改善の進め方.md` 3-3 節）。作った直後に次をする。
 
 - `frontend/src/App.css` を消し、`frontend/src/App.tsx` から読み込みを外す
 - `frontend/src/index.css` の中身を消す。色・文字の大きさ・余白は、見た目の方向を決めてから（`DESIGN.md`）CSS の変数で書く。それまでは書体と行間くらいにとどめる
@@ -85,11 +85,9 @@ frontend を作ったら、手元に `.vscode/settings.json`（JS・JSON・HTML 
 
 ## 4. 開き直す
 
-```bash
-code ~/workspace/apps/{アプリ名}
-```
+Claude デスクトップ版で `C:\Users\annin\workspace\apps\{アプリ名}` を作業フォルダにして、新しい会話を開く。
 
-**以降の設計・実装はこの新しいウィンドウで行う。** `~/workspace/apps/` 直下のセッションは閉じてよい。
+**以降の設計・実装はこの新しい会話で行う。** `~/workspace/apps/` 直下のセッションは閉じてよい。
 
 ## 5. このファイルを消す
 
@@ -97,3 +95,5 @@ code ~/workspace/apps/{アプリ名}
 rm SETUP.md
 git add -A && git commit -m "chore: テンプレートから {アプリ名} を初期化"
 ```
+
+作ったばかりで、ほかの会話がこのリポジトリを触っていないので、この初回だけ `git add -A` でよい（ふだんは全体の決まりどおり、変えたファイルだけをパス指定で add する）。
