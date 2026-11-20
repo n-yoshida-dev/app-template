@@ -44,8 +44,10 @@ Claude に代行させる場合は、Claude デスクトップ版に同梱の CL
 
 ```bash
 CLI=$(ls -d ~/AppData/Local/Claude-Data/claude_*/claude-code/*/*/claude.exe | sort -V | tail -1)
-for p in $(jq -r '.enabledPlugins | keys[]' .claude/settings.json); do "$CLI" plugin install "$p" --scope project; done
+for p in $(jq -r '.enabledPlugins | keys[]' .claude/settings.json | tr -d '\r'); do "$CLI" plugin install "$p" --scope project; done
 ```
+
+`tr -d '\r'` は、Windows の `jq` が行末に付ける改行の印（`\r`）を消すため（残るとプラグインの名前の後ろに混ざり、install が「not found」で失敗する。2026-11-21 に when-to-buy で 3 本が失敗した。Linux や macOS では消す物が無いだけで害は無い）。
 
 どちらも**反映は次のセッションから**。
 **`/plugin` の一覧や `claude plugin list` の「enabled」表示は `enabledPlugins` しか見ていないので当てにならない。**
@@ -91,9 +93,19 @@ Claude デスクトップ版で `C:\Users\annin\workspace\apps\{アプリ名}` �
 
 ## 5. このファイルを消す
 
+`main` へ直接コミットせず、作業ブランチ `feat/initial-setup` を切ってコミットし、PR 経由で `main` にマージする。
+
 ```bash
+git switch -c feat/initial-setup
 rm SETUP.md
-git add -A && git commit -m "chore: テンプレートから {アプリ名} を初期化"
+git status --short   # 自分が変えた・作ったファイルを確かめる
+# 下の FILES は、上の一覧のうち自分が変えた物だけにする（作っていない frontend / backend は外す）
+FILES="SETUP.md CLAUDE.md README.md PLAN.md HANDOFF.md DESIGN.md frontend backend"
+git add -- $FILES
+git commit -m "chore: テンプレートから {アプリ名} を初期化" -- $FILES
+git push -u origin feat/initial-setup
 ```
 
-作ったばかりで、ほかの会話がこのリポジトリを触っていないので、この初回だけ `git add -A` でよい（ふだんは全体の決まりどおり、変えたファイルだけをパス指定で add する）。
+`git add -A` と `commit -a` は使わず、自分が変えたファイルだけをパス指定で add し、コミットにもパスを指定する
+（同じリポジトリで別の Claude セッションが同時に作業していることがあるため。決まりは `~/.claude/rules/git-concurrent.md`）。
+push のあとの PR の作成からマージまでは `apps-workflow:pr-flow` スキルの手順どおりに進め、CI が通ってからマージする（決まりは `~/workspace/apps/CLAUDE.md` の「Git運用ルール」）。
